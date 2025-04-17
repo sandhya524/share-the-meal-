@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Items</title>
+    <style>
+        body {
+          background-image: url("https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZvb2R8ZW58MHx8MHx8fDA%3D");
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+          font-family: Arial, sans-serif;
+          color: #333;
+          text-align: center;
+          padding: 20px;
+          min-height: 100vh;
+        }
+      
+        h1 {
+          background: rgb(0, 49, 0);
+          padding: 15px 25px;
+          border-radius: 8px;
+          display: inline-block;
+          color: white;
+          font-size: 24px;
+          margin-bottom: 20px;
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+        }
+      
+        .container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          justify-content: center;
+        }
+      
+        .item-box {
+          background: white;
+          border: 1px solid #ddd;
+          padding: 15px;
+          border-radius: 10px;
+          box-shadow: 2px 2px 8px rgb(0, 49, 0);
+          width: 260px;
+          max-width: 90vw;
+          text-align: center;
+          transition: box-shadow 0.3s ease;
+        }
+      
+        .item-box:hover {
+          box-shadow: 4px 4px 12px rgb(0, 49, 0);
+        }
+      
+        input {
+          width: 90%;
+          padding: 8px;
+          margin: 6px 0;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          text-align: center;
+          font-size: 14px;
+        }
+      
+        .btn {
+          padding: 8px 12px;
+          border: none;
+          cursor: pointer;
+          border-radius: 5px;
+          font-size: 14px;
+          font-weight: bold;
+          margin-top: 10px;
+          margin-left: 5px;
+          transition: background 0.3s ease;
+        }
+      
+        .update-btn {
+          background: rgb(1, 99, 1);
+          color: white;
+        }
+      
+        .remove-btn {
+          background: #d9534f;
+          color: white;
+        }
+      
+        .btn:hover {
+          opacity: 0.9;
+        }
+      
+        /* Back button */
+        .back-button {
+          position: fixed;
+          bottom: 20px;
+          left: 20px;
+          background: rgb(0, 49, 0);
+          color: white;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 6px;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background 0.3s ease-in-out;
+          text-decoration: none;
+          z-index: 999;
+        }
+      
+        .back-button:hover {
+          background: rgb(4, 60, 70);
+        }
+      
+        /* Tablet responsiveness */
+        @media (max-width: 768px) {
+          h1 {
+            font-size: 20px;
+            padding: 12px 20px;
+          }
+      
+          input {
+            font-size: 13px;
+          }
+      
+          .btn {
+            font-size: 13px;
+            padding: 7px 10px;
+          }
+      
+          .item-box {
+            width: 90%;
+          }
+        }
+      
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+          h1 {
+            font-size: 18px;
+          }
+      
+          .back-button {
+            position: static;
+            margin: 20px auto 0;
+            display: inline-block;
+          }
+      
+          .container {
+            flex-direction: column;
+            align-items: center;
+          }
+      
+          .item-box {
+            width: 95%;
+          }
+      
+          input {
+            font-size: 13px;
+          }
+        }
+      </style>
+      
+</head>
+<body>
+    <h1>Manage Your Food Items</h1>
+    
+
+    <div class="container" id="itemsContainer"></div>
+
+    <a href="./crud1.html" class="back-button">Back</a>
+
+    <script>
+        var storedItems = JSON.parse(localStorage.getItem("add")) || [];
+        var currentUserUID = localStorage.getItem("firebaseUser");
+        var filteredItems = storedItems.filter(item => item.firebaseUid === currentUserUID);
+        var container = document.getElementById("itemsContainer");
+
+        filteredItems.forEach((val) => {
+            var child = document.createElement("div");
+            child.classList.add("item-box");
+
+            var item_name = document.createElement("input");
+            item_name.type = "text";
+            item_name.value = val.dish;
+            item_name.disabled = true;
+
+            var item_quantity = document.createElement("input");
+            item_quantity.type = "text";
+            item_quantity.value =`Quantity: ${val.quantity} Persons`;
+            item_quantity.disabled = true;
+
+            var item_expiry = document.createElement("input");
+            item_expiry.type = "datetime-local";
+            item_expiry.value = val.expiry || "";
+            item_expiry.disabled = true;
+
+            var btn_div = document.createElement("div");
+            
+            var update = document.createElement("button");
+            update.innerText = "Update";
+            update.classList.add("btn", "update-btn");
+            update.addEventListener("click", function () {
+                if (update.innerText === "Update") {
+                    item_name.disabled = false;
+                    item_quantity.disabled = false;
+                    item_expiry.disabled = false;
+                    update.innerText = "Save";
+                } else {
+                    let storedIndex = storedItems.findIndex(item => item.dish === val.dish && item.firebaseUid === currentUserUID);
+                    if (storedIndex !== -1) {
+                        storedItems[storedIndex].dish = item_name.value;
+                        storedItems[storedIndex].expiry = item_expiry.value;
+                        storedItems[storedIndex].quantity = item_quantity.value;
+                        localStorage.setItem("add", JSON.stringify(storedItems));
+                        alert("✅ Item updated successfully!");
+                    }
+                    item_name.disabled = true;
+                    item_quantity.disabled = true;
+                    item_expiry.disabled = true;
+                    update.innerText = "Update";
+                }
+            });
+
+            var remove = document.createElement("button");
+            remove.innerText = "Remove";
+            remove.classList.add("btn", "remove-btn");
+            remove.addEventListener("click", function () {
+                let storedIndex = storedItems.findIndex(item => item.dish === val.dish && item.firebaseUid === currentUserUID);
+                if (storedIndex !== -1) {
+                    storedItems.splice(storedIndex, 1);
+                    localStorage.setItem("add", JSON.stringify(storedItems));
+                }
+                child.remove();
+            });
+
+            btn_div.append(update, remove);
+            child.append(item_name, item_quantity, item_expiry, btn_div);
+            container.append(child);
+        });
+    </script>
+</body>
+</html>

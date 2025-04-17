@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Food Donation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+  
+    body {
+      background-image: url("https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhhcHBpbmVzc3xlbnwwfHwwfHx8MA%3D%3D");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+  
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 2rem;
+      text-shadow: 1px 1px 3px #000;
+    }
+  
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 400px;
+      max-width: 90vw;
+    }
+  
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border 0.3s ease-in-out;
+    }
+  
+    input:focus,
+    select:focus {
+      border-color: rgb(6, 78, 89);
+      outline: none;
+    }
+  
+    button {
+      width: 100%;
+      padding: 10px;
+      background: rgb(6, 78, 89);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out;
+    }
+  
+    button:hover {
+      background: rgb(4, 60, 70);
+    }
+  
+    .back-button,
+    .edit-button {
+      position: fixed;
+      bottom: 20px;
+      background: rgb(6, 78, 89);
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 10;
+    }
+  
+    .back-button {
+      left: 20px;
+    }
+  
+    .edit-button {
+      right: 20px;
+    }
+  
+    .back-button:hover,
+    .edit-button:hover {
+      background: rgb(4, 60, 70);
+    }
+  
+    /* Responsive for tablets */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+  
+      .container {
+        width: 90%;
+        padding: 15px;
+      }
+  
+      input,
+      select {
+        font-size: 15px;
+      }
+  
+      button {
+        font-size: 15px;
+      }
+  
+      .back-button,
+      .edit-button {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+    }
+  
+    /* Responsive for mobile */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+  
+      .container {
+        width: 100%;
+      }
+  
+      .back-button,
+      .edit-button {
+        position: static;
+        margin: 10px 5px 0;
+        display: inline-block;
+      }
+  
+      .bottom-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+    }
+  </style>
+  
+</head>
+<body>
+
+  <h1>Enter Your Items</h1>
+
+  <div class="container">
+    <h3>Add Food Item</h3>
+    <input type="text" placeholder="Restaurant Name" id="Restaurant_Name" />
+    <input type="text" id="dish" placeholder="Enter dish" />
+    <input type="number" id="quantity" placeholder="Enter quantity as per persons" />
+    <input type="datetime-local" id="date" />
+    <input type="text" placeholder="Location" id="Location" />
+    <!-- <input type="text" placeholder="District" id="district" /> -->
+     <label for="district">District: </label>
+    <select name="district" id="district">
+      <option value="Hyderabad">Hyderabad</option>
+      <option value="Karimnagar">Karimnagar</option>
+      <option value="Warangal">Warangal</option>
+    </select> <br> <br>
+    
+
+    <input type="number" placeholder="Phone Number" id="ph_num" />
+    <button id="submit">Submit</button>
+  </div>
+
+  <a href="./crud1.html" class="back-button">BACK</a>
+  <a href="./updated1.html" class="edit-button">EDIT</a>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7S86kVjVhGrr2rIrnBnznog7Ky4A_88E",
+      authDomain: "restarent-sign-up.firebaseapp.com",
+      databaseURL: "https://restarent-sign-up-default-rtdb.firebaseio.com/",
+      projectId: "restarent-sign-up",
+      storageBucket: "restarent-sign-up.appspot.com",
+      messagingSenderId: "724234954033",
+      appId: "1:724234954033:web:47cf9f2ab505022e78fc10"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.getElementById("submit").addEventListener("click", () => {
+      const restaurantName = document.getElementById("Restaurant_Name").value.trim();
+      const dish = document.getElementById("dish").value.trim();
+      const quantity = Number(document.getElementById("quantity").value);
+      const expiry = document.getElementById("date").value;
+      const location = document.getElementById("Location").value.trim();
+      const district = document.getElementById("district").value.trim();
+      const phoneNumber = document.getElementById("ph_num").value.trim();
+      const firebaseUid = localStorage.getItem("firebaseUser");
+
+      if (!firebaseUid) {
+        alert("⚠️ Please log in before adding food items.");
+        return;
+      }
+
+      if (!restaurantName || !dish || !quantity || !location || !district || !phoneNumber || !expiry) {
+        alert("⚠️ Please fill in all fields before submitting.");
+        return;
+      }
+
+      const foodRef = ref(db, "foodItems");
+      const newFoodRef = push(foodRef);
+      const foodId = newFoodRef.key;
+
+      const foodItem = {
+        id: foodId,
+        restaurantName,
+        dish,
+        quantity,
+        expiry,
+        location,
+        district,
+        phoneNumber,
+        firebaseUid
+      };
+
+      // Save to Firebase
+      set(newFoodRef, foodItem)
+        .then(() => {
+          alert("✅ Food item added successfully!");
+
+          // Save to localStorage
+          let storedItems = JSON.parse(localStorage.getItem("add")) || [];
+          storedItems.push(foodItem);
+          localStorage.setItem("add", JSON.stringify(storedItems));
+
+          let storedIds = JSON.parse(localStorage.getItem("foodItemIds")) || [];
+          storedIds.push(foodId);
+          localStorage.setItem("foodItemIds", JSON.stringify(storedIds));
+
+          // Clear inputs
+          document.getElementById("Restaurant_Name").value = "";
+          document.getElementById("dish").value = "";
+          document.getElementById("quantity").value = "";
+          document.getElementById("date").value = "";
+          document.getElementById("Location").value = "";
+          document.getElementById("district").value = "";
+          document.getElementById("ph_num").value = "";
+        })
+        .catch(error => {
+          console.error("❌ Error adding food item:", error);
+          alert("❌ Error adding food item: " + error.message);
+        });
+    });
+  </script>
+</body>
+</html>

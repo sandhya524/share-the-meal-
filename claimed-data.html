@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Claimed Food</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: url('https://images.unsplash.com/photo-1477414348463-c0eb7f1359b6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzZ8fHRoYW5rc2dpdmluZ3xlbnwwfHwwfHx8MA%3D%3D') no-repeat center center/cover;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+    color: white;
+    font-size: 28px;
+    margin-bottom: 20px;
+    background: rgb(177, 6, 97);
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-block;
+    z-index: 1;
+  }
+
+  #claimedContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1000px;
+    width: 100%;
+  }
+
+  .card {
+    border: 2px solid #fff;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    width: 280px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+  }
+
+  .card h3 {
+    font-size: 20px;
+    color: rgb(197, 5, 107);
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    font-size: 16px;
+    color: rgb(11, 10, 11);
+    margin: 5px 0;
+  }
+
+  .back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 8px 16px;
+    background-color: rgb(177, 6, 97);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+  }
+
+  .back-btn a {
+    text-decoration: none;
+    color: white;
+  }
+
+  .back-btn:hover {
+    background-color: rgb(235, 155, 198);
+  }
+
+  /* 🔁 RESPONSIVENESS */
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 22px;
+      padding: 8px 16px;
+    }
+
+    .card {
+      width: 90%;
+      max-width: 320px;
+    }
+
+    .back-btn {
+      font-size: 14px;
+      padding: 6px 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    .back-btn {
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+    }
+  }
+  </style>
+</head>
+<body>
+
+  <h2>My Claimed Food</h2>
+  <div id="claimedContainer"></div>
+  <button class="back-btn"><a href="./available_meal.html">Back</a></button>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get current logged-in user's UID from localStorage
+      const currentUserUID = localStorage.getItem("firebaseUser-volunteer");
+
+      if (!currentUserUID) {
+        alert("User not found. Please log in.");
+        window.location.href = "index.html"; // Redirect to login page
+        return;
+      }
+
+      // Get all claimed items from localStorage
+      const claimedItems = JSON.parse(localStorage.getItem("claimedData")) || [];
+
+      console.log("All claimed items:", claimedItems);
+      console.log("Current User UID:", currentUserUID);
+
+      // Ensure both are strings for a strict comparison
+      const myClaims = claimedItems.filter(item => String(item.firebaseUid) === String(currentUserUID));
+
+      console.log("Filtered claims for current user:", myClaims);
+
+      const container = document.getElementById("claimedContainer");
+
+      // Show message if no claims
+      if (myClaims.length === 0) {
+        container.innerHTML = `<p style="color: white; font-size: 20px; background: rgba(0, 0, 0, 0.7); padding: 10px; border-radius: 5px;">No claimed food yet.</p>`;
+      } else {
+        // Display each claimed item
+        myClaims.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML = `
+            <h3>🍽️ ${item.restaurantName}</h3>
+            <p><strong>Dish:</strong> ${item.itemName}</p>
+            <p><strong>Quantity:</strong> ${item.itemQuantity}</p>
+            <p><strong>Claimed At:</strong> ${item.expiry}</p>
+          `;
+
+          container.appendChild(card);
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

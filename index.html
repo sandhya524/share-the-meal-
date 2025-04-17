@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share-The-Meal</title>
+    <link rel="icon" href="https://media.istockphoto.com/id/1309880216/photo/breaking-fasting-time-at-the-ramadan-month-prepared-table-for-iftar.webp?a=1&b=1&s=612x612&w=0&k=20&c=bM9uo5ZkS3_P5rFRmE_iUFlts1GTp9S13dqR9noL3ew=">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+       
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: rgb(5, 63, 73);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: rgb(206, 50, 22);
+}
+
+
+.menu-toggle, .hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8rem 5% 4rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgb(89, 122, 128) 0%, #fad0c4 100%);
+}
+
+.hero-content {
+    flex: 1;
+    padding-right: 2rem;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    line-height: 1.2;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #666;
+    max-width: 600px;
+}
+
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+
+.image-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 4rem 5%;
+}
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-content h3 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.card-content p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+
+.info-section {
+    display: flex;
+    align-items: center;
+    padding: 4rem 5%;
+    margin: 2rem 0;
+}
+
+.info-section:nth-child(even) {
+    flex-direction: row-reverse;
+    background-color: #f0f0f0;
+}
+
+.info-section img {
+    flex: 1;
+    max-width: 50%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.info-content {
+    flex: 1;
+    padding: 0 3rem;
+}
+
+.info-content h1, .info-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.info-content p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+}
+
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 3rem 5%;
+    text-align: center;
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+footer button {
+    background-color: rgb(3, 59, 69);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 0 0 auto;
+}
+
+footer button:hover {
+    background-color: rgb(89, 122, 128);
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+
+@media (max-width: 1024px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+    
+    .info-content h1, .info-content h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    
+    .menu-toggle {
+        display: block;
+        opacity: 0;
+        position: absolute;
+    }
+    
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+    }
+    
+    .hamburger span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background-color: #333;
+        transition: all 0.3s;
+    }
+    
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 0.3s;
+    }
+    
+    .nav-links li {
+        margin: 0.5rem 0;
+    }
+    
+    .menu-toggle:checked ~ .nav-links {
+        transform: scaleY(1);
+    }
+    
+    .menu-toggle:checked ~ .hamburger span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+    
+    .menu-toggle:checked ~ .hamburger span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .menu-toggle:checked ~ .hamburger span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+    
+    
+    .hero {
+        flex-direction: column;
+        padding-top: 6rem;
+        text-align: center;
+    }
+    
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 2rem;
+    }
+    
+    .hero-content p {
+        max-width: 100%;
+    }
+    
+    
+    .info-section, .info-section:nth-child(even) {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .info-section img {
+        max-width: 100%;
+        margin-bottom: 2rem;
+    }
+    
+    .info-content {
+        padding: 0;
+    }
+    
+    .info-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    
+    .footer-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    footer button {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        text-align: center;
+    }
+    
+    .hero {
+        padding: 6rem 5% 2rem;
+        width: 100%;
+        margin-left: 17%;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-content, .info-content {
+        text-align: center;
+    }
+    
+    .image-cards {
+        grid-template-columns: 1fr;
+        padding: 2rem 5%;
+        width: 100%;
+        margin-left: 17%;
+    
+    }
+    .info-section{
+        width: 100%;
+        margin-left: 17%;
+    }
+    
+    .info-content h1, .info-content h2 {
+        font-size: 1.8rem;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .info-section, .info-section:nth-child(even) {
+        padding: 2rem 5%;
+    }
+    #footer{
+        width: 100%;
+        margin-left: 17%;
+    }
+    
+    
+    .hero-content p,
+    .card-content,
+    .info-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+[data-aos] {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+[data-aos="flip-up"] {
+    transform: perspective(1000px) rotateX(-90deg);
+    opacity: 0;
+    transform-origin: top;
+}
+
+[data-aos="flip-up"].aos-animate {
+    transform: perspective(1000px) rotateX(0);
+    opacity: 1;
+}
+
+[data-aos="zoom-out-left"] {
+    transform: translateX(100px) scale(0.9);
+    opacity: 0;
+}
+
+[data-aos="zoom-out-left"].aos-animate {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+    </style>
+
+    
+
+
+
+    
+</head>
+<body>
+
+    
+<nav class="navbar">
+    <div class="logo">Share-The-Meal</div>
+    
+   
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+
+    <ul class="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="rs_su.html">Be-a-Hand-as-a-Doner</a></li>
+        <li><a href="volunteer_su.html">Be-a-Hand-as-a-Volunteer</a></li>
+        <li><a href="#footer">Contact</a></li>
+    </ul>
+</nav>
+
+
+    
+
+    
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1>FOOD <br> DONATION</h1>
+            <p>
+                "Food donation is a simple act of kindness that can nourish both the body and soul, bridging the gap between abundance and hunger in our communities."
+            </p>
+        </div>
+        <div class="hero-image">
+            <img src="https://plus.unsplash.com/premium_photo-1683140538884-07fb31428ca6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Zm9vZCUyMGRvbmF0aW9uJTIwcGljc3xlbnwwfHwwfHx8MA%3D%3D" alt="Food Donation" data-aos="flip-up" data-aos-duration ="1000">
+        </div>
+    </section>
+
+    <div class="image-cards">
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1732800577634-f2e5c4d43995?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZG9uYXRpb24lMjBwaWNzfGVufDB8fDB8fHww" alt="Donation Image 1">
+            <div class="card-content">
+                <h3>Helping Hands</h3>
+                <p>Support the needy with food donations.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1695653422259-8a74ffe90401?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvb2QlMjBkb25hdGlvbiUyMHBpY3N8ZW58MHx8MHx8fDA%3D" alt="Donation Image 3">
+            <div class="card-content">
+                <h3>Feeding the Hungry</h3>
+                <p>Make a difference with small acts of kindness.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1698795635937-31264cdbf359?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzV8fGZvb2QlMjBkb25hdGlvbiUyMHBpY3N8ZW58MHx8MHx8fDA%3D" alt="Donation Image 2">
+            <div class="card-content">
+                <h3>Save Food</h3>
+                <p>Prevent food waste by donating excess food.</p>
+            </div>
+        </div>
+    
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1694286080313-f87202a04452?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZvb2QlMjBkb25hdGlvbiUyMHBpY3N8ZW58MHx8MHx8fDA%3D" alt="Donation Image 4">
+            <div class="card-content">
+                <h3>Join the Cause</h3>
+                <p>Become a part of the food donation community.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1668838268173-816ee121ad4a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTQ0fHxmb29kJTIwZG9uYXRpb24lMjBwaWNzfGVufDB8fDB8fHww" alt="Donation Image 5">
+            <div class="card-content">
+                <h3>Share a Meal</h3>
+                <p>Every meal shared can bring a smile to someone's face.</p>
+            </div>
+        </div>
+    
+        <div class="card">
+            <img src="https://plus.unsplash.com/premium_photo-1683121608450-08d5ee613dd8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGZvb2QlMjBkb25hdGlvbiUyMHBpY3N8ZW58MHx8MHx8fDA%3D" alt="Donation Image 6">
+            <div class="card-content">
+                <h3>Reduce Waste</h3>
+                <p>Help us minimize food waste by donating excess food.</p>
+            </div>
+        </div>
+    
+        <div class="card">
+            <img src="https://media.istockphoto.com/id/941788480/photo/portrait-of-girl-kid-having-mid-day-meal-in-indian-school.webp?a=1&b=1&s=612x612&w=0&k=20&c=VQH6wklsVx9UlbFHNbzG7fYESlfdQwN-kYlqmQWzCyY=" alt="Donation Image 7">
+            <div class="card-content">
+                <h3>Fight Hunger</h3>
+                <p>Join our mission to provide food for those in need.</p>
+            </div>
+        </div>
+    
+        <div class="card">
+            <img src="https://plus.unsplash.com/premium_photo-1663126491340-e96b3b7205b6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTQ5fHxmb29kJTIwZG9uYXRpb24lMjBwaWNzfGVufDB8fDB8fHww" alt="Donation Image 8">
+            <div class="card-content">
+                <h3>Community Support</h3>
+                <p>Helping communities stay nourished and healthy.</p>
+            </div>
+        </div>
+    
+    
+        
+    </div>
+
+    <!-- Info Section 1 -->
+    <section class="info-section" id="about">
+        <img src="https://images.unsplash.com/photo-1644822861306-55353baefb98?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjU0fHxmb29kJTIwZG9uYXRpb24lMjBwaWNzfGVufDB8fDB8fHww" alt="baby" data-aos="zoom-out-left" data-aos-duration="1000">
+        <div class="info-content">
+            <h1>What It Is:</h1>
+            <p>Food donation involves individuals, businesses, or organizations donating food to charities or organizations that distribute it to people experiencing food insecurity or hunger.</p>
+        </div>
+    </section>
+
+    <!-- Info Section 2 -->
+    <section class="info-section">
+        <img src="https://images.unsplash.com/photo-1701361752166-3376dd742128?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjc0fHxmb29kJTIwZG9uYXRpb24lMjBwaWNzfGVufDB8fDB8fHww" alt="food" data-aos="zoom-out-left" data-aos-duration="1000">
+        <div class="info-content">
+            <h2>Why it's important:</h2>
+            <p>Food donation is crucial because it helps address hunger and food insecurity, providing essential resources to vulnerable populations.</p>
+        </div>
+        
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <button><a href="tel:6302447653">Call Us</a></button>
+        <button><a href="mailto:narigesandhya97@gmail.com">Mail Us</a></button>
+        <button><a href="https://wa.me/6302447653?text=Hello">WhatsApp Us</a></button>
+    </footer>
+    <script>
+         AOS.init();
+    </script>
+
+</body>
+</html>
+
+

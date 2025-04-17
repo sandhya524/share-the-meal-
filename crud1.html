@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+body {
+    background-image: url("https://media.istockphoto.com/id/1218855217/photo/sad-child-in-isolation-at-home.webp?a=1&b=1&s=612x612&w=0&k=20&c=Q7_wIkNCN7bqUPWhC2ku6xo5mG_BhMaHfhm6ByJ6fgc=");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Header */
+h1 {
+    color: rgb(247, 171, 29);
+    margin-bottom: 30px;
+    margin-left: 60%;
+    font-size: 2.5rem;
+    text-shadow: 1px 1px 5px black;
+    text-align: center;
+}
+
+/* Navigation container */
+div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    width: 100%;
+    padding-right: 100px;
+    box-sizing: border-box;
+}
+
+/* Cards */
+h3 {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    padding: 20px 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 250px;
+    text-align: center;
+}
+
+h3:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+}
+
+h3 a {
+    text-decoration: none;
+    color: rgb(247, 171, 29);
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+h3 a:hover {
+    color: white;
+}
+
+/* ======= Responsive Design ======= */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+        margin-left: 0;
+    }
+
+    div {
+        align-items: center;
+        padding-right: 0;
+    }
+
+    h3 {
+        width: 80%;
+        padding: 15px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+        padding: 12px 16px;
+    }
+
+    h3 a {
+        font-size: 1rem;
+    }
+}
+</style>
+
+</head>
+<body>
+    <h1>Waiting for You - Make them Happy</h1>
+    <div>
+        <h3><a href="creat.html" target="_self">Share Your Food</a></h3>
+        <h3><a href="updated1.html" target="_self">Update</a></h3>
+        <h3><a href="#" id="logout-link">Logout</a></h3> <!-- Logout Link -->
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7S86kVjVhGrr2rIrnBnznog7Ky4A_88E",
+            authDomain: "restarent-sign-up.firebaseapp.com",
+            projectId: "restarent-sign-up",
+            storageBucket: "restarent-sign-up.firebasestorage.app",
+            messagingSenderId: "724234954033",
+            appId: "1:724234954033:web:47cf9f2ab505022e78fc10"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Check user authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Redirect to login page if not logged in
+                window.location.href = "index.html";
+            }
+        });
+
+        // Logout functionality
+        document.getElementById("logout-link").addEventListener("click", async (event) => {
+            event.preventDefault(); // Prevent default link behavior
+
+            try {
+                await signOut(auth);
+                localStorage.removeItem("firebaseUser"); // Clear stored user data
+                alert("Logged out successfully!");
+                window.location.href = "index.html"; // Redirect to login page
+            } catch (error) {
+                console.error("Logout error:", error.message);
+            }
+        });
+
+       
+    </script>
+</body>
+</html>

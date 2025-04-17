@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Available Food</title>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-image: url("https://images.unsplash.com/photo-1620841713108-18ad2b52d15c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aGVscGluZyUyMGhhbmRzfGVufDB8fDB8fHww");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: -1;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgb(88, 2, 58);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      flex-wrap: wrap;
+    }
+
+    .header h1 {
+      font-size: 28px;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 26px;
+      cursor: pointer;
+      background: rgb(88, 2, 58);
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    select, #search-btn, #logout-btn {
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      border: 1px solid #ccc;
+    }
+
+    #search-btn, #logout-btn {
+      background-color: pink;
+      border: none;
+      cursor: pointer;
+    }
+
+    #search-btn:hover, #logout-btn:hover {
+      background-color: rgb(255, 192, 203);
+    }
+
+    .claimed-data-container {
+      margin: 15px 0;
+    }
+
+    .claimed-data-btn {
+      background: pink;
+      color: black;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+      display: inline-block;
+    }
+
+    .claimed-data-btn:hover {
+      background: rgb(255, 182, 193);
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .food-card {
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      text-align: center;
+    }
+
+    .claim-btn {
+      background: rgb(88, 2, 58);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .claim-btn:hover {
+      background: rgb(120, 20, 80);
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .mobile-menu.active {
+      display: flex;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .top-bar {
+    display: none;
+  }
+
+  .claimed-data-container.desktop {
+    display: none;
+  }
+}
+
+
+    @media (min-width: 769px) {
+      .mobile-menu {
+        display: none !important;
+      }
+
+      .claimed-data-container.mobile {
+        display: none;
+      }
+
+      .claimed-data-container.desktop {
+        display: block;
+        text-align: left;
+      }
+    }
+
+    h2 {
+      color: rgb(88, 2, 58);
+      text-align: center;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Available Food</h1>
+    <div class="top-bar">
+      <label for="location-desktop">District:</label>
+      <select id="location-desktop">
+        <option value="">-- All Districts --</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Karimnagar">Karimnagar</option>
+        <option value="Warangal">Warangal</option>
+      </select>
+      <button id="search-btn-desktop">Search</button>
+      <button id="logout-btn-desktop">Logout</button>
+    </div>
+    <div class="hamburger" id="hamburger">&#9776;</div>
+  </div>
+
+  <!-- Claimed Data for Desktop -->
+  <div class="claimed-data-container desktop">
+    <a href="./claimed-data.html" class="claimed-data-btn">📄 Claimed Data</a>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <label for="location-mobile">District:</label>
+    <select id="location-mobile">
+      <option value="">-- All Districts --</option>
+      <option value="Hyderabad">Hyderabad</option>
+      <option value="Karimnagar">Karimnagar</option>
+      <option value="Warangal">Warangal</option>
+    </select>
+    <button id="search-btn-mobile">Search</button>
+    <button id="logout-btn-mobile">Logout</button>
+    <div class="claimed-data-container mobile">
+      <a href="./claimed-data.html" class="claimed-data-btn">📄 Claimed Data</a>
+    </div>
+  </div>
+
+  <h2 data-aos="flip-left" data-aos-easing="ease-out-cubic" data-aos-duration="2000">
+    "Volunteers don't get paid, not because they're worthless, but because they're priceless."
+  </h2>
+
+  <div class="container">
+    <!-- Food items will be injected here -->
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7S86kVjVhGrr2rIrnBnznog7Ky4A_88E",
+      authDomain: "restarent-sign-up.firebaseapp.com",
+      databaseURL: "https://restarent-sign-up-default-rtdb.firebaseio.com/",
+      projectId: "restarent-sign-up",
+      storageBucket: "restarent-sign-up.appspot.com",
+      messagingSenderId: "724234954033",
+      appId: "1:724234954033:web:47cf9f2ab505022e78fc10"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const hamburger = document.getElementById("hamburger");
+    const mobileMenu = document.getElementById("mobileMenu");
+    hamburger.addEventListener("click", () => {
+      mobileMenu.classList.toggle("active");
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert("Please login to view available food.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      const container = document.querySelector(".container");
+      const dropdownDesktop = document.getElementById("location-desktop");
+      const dropdownMobile = document.getElementById("location-mobile");
+      const searchDesktop = document.getElementById("search-btn-desktop");
+      const searchMobile = document.getElementById("search-btn-mobile");
+      const logoutDesktop = document.getElementById("logout-btn-desktop");
+      const logoutMobile = document.getElementById("logout-btn-mobile");
+
+      let foodItems = [];
+
+      function displayItems(items) {
+        container.innerHTML = "";
+        if (items.length === 0) {
+          container.innerHTML = "<p style='color:white;'>No available food items found.</p>";
+          return;
+        }
+
+        items.forEach((item) => {
+          const card = document.createElement("div");
+          card.classList.add("food-card");
+
+          card.innerHTML = `
+            <h3>🍽️ ${item.restaurantName}</h3>
+            <p>Dish: ${item.dish}</p>
+            <p>Quantity: ${item.quantity}</p>
+            <p>Expiry: ${new Date(item.expiry).toLocaleString()}</p>
+            <p>📍 Location: ${item.location}</p>
+            <p>📍 District: ${item.district}</p>
+            <p>📞 Phone: ${item.phoneNumber}</p>
+          `;
+
+          const claimBtn = document.createElement("button");
+          claimBtn.textContent = "Claim";
+          claimBtn.classList.add("claim-btn");
+
+          claimBtn.addEventListener("click", () => {
+            const claimData = {
+              firebaseUid: user.uid,
+              restaurantName: item.restaurantName,
+              itemName: item.dish,
+              itemQuantity: item.quantity,
+              expiry: new Date().toLocaleString()
+            };
+
+            const allClaims = JSON.parse(localStorage.getItem("claimedData")) || [];
+            allClaims.push(claimData);
+            localStorage.setItem("claimedData", JSON.stringify(allClaims));
+            localStorage.setItem("firebaseUser-volunteer", user.uid);
+
+            remove(ref(db, "foodItems/" + item.id))
+              .then(() => console.log("✅ Claimed and deleted from Firebase"))
+              .catch((err) => console.error("❌ Error deleting:", err.message));
+
+            const message = `Hello ${item.restaurantName}, your donated meal (${item.dish}, Quantity: ${item.quantity}) has been claimed! Thank you for your generosity.`;
+            window.open(`https://wa.me/${item.phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
+          });
+
+          card.appendChild(claimBtn);
+          container.appendChild(card);
+        });
+      }
+
+      function fetchAndDisplayItems(districtFilter = "") {
+        onValue(ref(db, "foodItems"), (snapshot) => {
+          const now = new Date();
+          foodItems = [];
+
+          snapshot.forEach(child => {
+            const data = child.val();
+            data.id = child.key;
+
+            const expiryDate = new Date(data.expiry);
+
+            if (expiryDate < now) {
+              remove(ref(db, "foodItems/" + data.id))
+                .then(() => console.log(`⏰ Deleted expired item: ${data.dish}`))
+                .catch(err => console.error("Error deleting expired item:", err.message));
+            } else {
+              if (!districtFilter || data.district.toLowerCase() === districtFilter.toLowerCase()) {
+                foodItems.push(data);
+              }
+            }
+          });
+
+          displayItems(foodItems);
+        });
+      }
+
+      fetchAndDisplayItems();
+
+      searchDesktop.addEventListener("click", () => fetchAndDisplayItems(dropdownDesktop.value));
+      searchMobile.addEventListener("click", () => fetchAndDisplayItems(dropdownMobile.value));
+
+      logoutDesktop.addEventListener("click", async () => {
+        await signOut(auth);
+        localStorage.removeItem("firebaseUser-volunteer");
+        alert("Logged out successfully!");
+        window.location.href = "index.html";
+      });
+
+      logoutMobile.addEventListener("click", async () => {
+        await signOut(auth);
+        localStorage.removeItem("firebaseUser-volunteer");
+        alert("Logged out successfully!");
+        window.location.href = "index.html";
+      });
+    });
+
+    AOS.init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            /* background:white; */
+            background-image: url("https://images.unsplash.com/photo-1636498342472-ed0e419fcaf7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjZ8fHBsYW4lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww");
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: rgb(6, 78, 89);
+            outline: none;
+            box-shadow: 0 0 5px rgb(6, 78, 89);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: rgb(6, 78, 89);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: rgb(6, 78, 89);
+        }
+
+        .toggle-text {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        .toggle-text span {
+            color: rgb(6, 78, 89);
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .toggle-text span:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="form-title">Login</h2>
+        <p id="error-message" class="error"></p>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="auth-button">Login</button>
+        <button id="guest-button">Guest Login</button> 
+
+        <p class="toggle-text">
+            Don't have an account? <span id="toggle-auth">Sign Up</span>
+        </p>
+    </div>
+
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyB7S86kVjVhGrr2rIrnBnznog7Ky4A_88E",
+    authDomain: "restarent-sign-up.firebaseapp.com",
+    projectId: "restarent-sign-up",
+    storageBucket: "restarent-sign-up.firebasestorage.app",
+    messagingSenderId: "724234954033",
+    appId: "1:724234954033:web:47cf9f2ab505022e78fc10"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Get HTML elements
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const authButton = document.getElementById("auth-button");
+const guestButton = document.getElementById("guest-button"); // Get Guest Login Button
+const toggleAuth = document.getElementById("toggle-auth");
+const formTitle = document.getElementById("form-title");
+const errorMessage = document.getElementById("error-message");
+
+let isSignup = false;
+
+// Toggle between Login & Signup
+toggleAuth.addEventListener("click", () => {
+    isSignup = !isSignup;
+    formTitle.innerHTML = isSignup ? "Sign Up" : "Login";
+    authButton.innerHTML = isSignup ? "Sign Up" : "Login";
+    toggleAuth.innerHTML = isSignup ? "Already have an account? Login" : "Don't have an account? Sign Up";
+});
+
+// Handle login & signup
+authButton.addEventListener("click", async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    errorMessage.textContent = ""; // Clear previous error
+
+    try {
+        if (isSignup) {
+            await createUserWithEmailAndPassword(auth, email, password);
+            alert("Signup successful!");
+        } else {
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("Login successful!");
+        }
+
+        // Redirect after authentication
+        window.location.href = "available_meal.html";
+
+    } catch (error) {
+        errorMessage.textContent = error.message;
+    }
+});
+
+// ✅ Guest Login Functionality
+guestButton.addEventListener("click", async () => {
+    try {
+        await signInAnonymously(auth);
+        alert("Guest login successful!");
+
+        // Redirect guest to CRUD page
+        window.location.href = "available_meal.html";
+
+    } catch (error) {
+        errorMessage.textContent = "Guest Login Error: " + error.message;
+    }
+});
+
+// Authentication state listener
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("Logged in user UID:", user.uid);
+        localStorage.setItem("firebaseUser", user.uid);
+    } else {
+        console.log("No user is logged in");
+        localStorage.removeItem("firebaseUser");
+    }
+});
+
+    </script>
+</body>
+</html>
